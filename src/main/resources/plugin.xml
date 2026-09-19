@@ -1,0 +1,18 @@
+<pluginMetaData path="datatype-edifact">
+	<name>EDIFACT Data Type</name>
+	<author>X Connections</author>
+	<pluginVersion>1.0.0</pluginVersion>
+	<mirthVersion>4.6.0</mirthVersion>
+	<url>https://x-connections.info</url>
+	<description>This plugin provides support for the EDIFACT data type (UN/EDIFACT interchanges, including UNA, release characters and repetition separators).</description>
+	<serverClasses>
+		<string>com.mirth.connect.plugins.datatypes.edifact.server.EDIFACTDataTypeServerPlugin</string>
+	</serverClasses>
+	<clientClasses>
+		<string>com.mirth.connect.plugins.datatypes.edifact.client.EDIFACTDataTypeClientPlugin</string>
+	</clientClasses>
+	<templateClassName>com.mirth.connect.plugins.datatypes.edifact.client.EDIFACTDataTypeCodeTemplatePlugin</templateClassName>
+	<library type="CLIENT" path="datatype-edifact-client.jar" />
+	<library type="SHARED" path="datatype-edifact-shared.jar" />
+	<library type="SERVER" path="datatype-edifact-server.jar" />
+</pluginMetaData>
