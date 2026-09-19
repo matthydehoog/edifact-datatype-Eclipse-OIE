@@ -43,27 +43,29 @@ public class EDIFACTXMLHandler extends DefaultHandler {
             readRootAttributes(atts);
         } else if (depth == 2) {
             segmentTag = name;
-            lastElement = 0;
+            lastElement = -1;
             output.append(name);
         } else if (depth == 3) {
-            int index = index(name, 1);
-            if (d.hasRepetition() && index == lastElement) {
+            int index = index(name, 1, 0);
+            if (d.hasRepetition() && index == lastElement && index > 0) {
                 output.append(d.repetition);
             } else if (index <= lastElement) {
                 throw new SAXException("Data element " + name + " is out of order or occurs twice in segment " + segmentTag);
             } else {
-                appendRepeated(d.element, index - lastElement);
+                // Element 0 (TAG.00) sits directly behind the tag and needs no element separator.
+                appendRepeated(d.element, lastElement < 0 ? index : index - lastElement);
             }
             lastElement = index;
             lastComponent = 0;
             writtenComponent = false;
         } else if (depth == 4) {
-            int index = index(name, 2);
+            int index = index(name, 2, 1);
             if (index <= lastComponent) {
                 throw new SAXException("Component " + name + " is out of order or occurs twice in segment " + segmentTag);
             }
-            // The first written component only needs delimiters for components before it that are empty.
-            appendRepeated(d.component, writtenComponent ? index - lastComponent : index - 1);
+            // The first written component only needs delimiters for components before it that are empty. The
+            // components of element 0 all follow a component separator, the first one included.
+            appendRepeated(d.component, writtenComponent || lastElement == 0 ? index - lastComponent : index - 1);
             lastComponent = index;
             writtenComponent = true;
         }
@@ -115,19 +117,19 @@ public class EDIFACTXMLHandler extends DefaultHandler {
     }
 
     /** Number in a name such as NAD.02 (part 1) or NAD.02.3 (part 2). */
-    private int index(String name, int part) throws SAXException {
+    private int index(String name, int part, int minimum) throws SAXException {
         String[] parts = name.split("\\.");
         if (parts.length != part + 1) {
             throw new SAXException("Unexpected element " + name + " in segment " + segmentTag);
         }
         try {
             int index = Integer.parseInt(parts[part]);
-            if (index < 1) {
+            if (index < minimum) {
                 throw new NumberFormatException();
             }
             return index;
         } catch (NumberFormatException e) {
-            throw new SAXException("Unexpected element " + name + " in segment " + segmentTag + ": the number after the dot must be 1 or higher");
+            throw new SAXException("Unexpected element " + name + " in segment " + segmentTag + ": the number after the dot must be " + minimum + " or higher");
         }
     }
 

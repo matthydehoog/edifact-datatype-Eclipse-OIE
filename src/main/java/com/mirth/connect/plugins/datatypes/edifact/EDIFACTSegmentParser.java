@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class EDIFACTSegmentParser {
 
-    /** One occurrence of a data element. Repeated elements (repetition separator) share their index. */
+    /** One occurrence of a data element. Repeated elements (repetition separator) share their index; index 0 is the composite directly after the tag (ARA:1+...). */
     public static class DataElement {
         public final int index;
         /** The components; a data element without content has a single empty component. */
@@ -91,7 +91,9 @@ public class EDIFACTSegmentParser {
         }
 
         int tagStart = pos;
-        while (pos < message.length() && message.charAt(pos) != d.element && message.charAt(pos) != d.segment()) {
+        // The tag normally ends at the element separator. Some national dialects (the Dutch MEDLAB messages, for
+        // example ARA:1+... and BEP:1:1:1+...) put components straight after the tag, so that ends it too.
+        while (pos < message.length() && message.charAt(pos) != d.element && message.charAt(pos) != d.segment() && message.charAt(pos) != d.component) {
             pos++;
         }
         String tag = message.substring(tagStart, pos);
@@ -108,9 +110,10 @@ public class EDIFACTSegmentParser {
             return segment;
         }
 
-        // On the element separator that follows the tag: data element 1 starts here.
+        // A separator follows the tag. After an element separator data element 1 starts. After a component
+        // separator the components belong to data element 0: the composite attached to the tag itself.
+        int elementIndex = message.charAt(pos) == d.component ? 0 : 1;
         pos++;
-        int elementIndex = 1;
         List<String> components = new ArrayList<String>();
         StringBuilder current = new StringBuilder();
 

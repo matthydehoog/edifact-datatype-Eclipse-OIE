@@ -1,7 +1,7 @@
 {
     "id": "datatype-edifact",
     "name": "EDIFACT Data Type",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "X Connections",
     "description": "EDIFACT data type properties - web equivalent of the EDIFACT DataTypeClientPlugin.",
     "oie": { "apiMin": "4.6" },

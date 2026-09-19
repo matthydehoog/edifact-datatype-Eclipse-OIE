@@ -114,8 +114,9 @@ public class EDIFACTReader extends AbstractXMLReader {
             String elementName = segment.tag + "." + pad(element.index);
             handler.startElement("", elementName, "", getEmptyAttributes());
 
-            // An empty data element stays an empty element, as in the EDI/X12 data type.
-            if (!element.isEmpty()) {
+            // An empty data element stays an empty element, as in the EDI/X12 data type. Element 0 (ARA:1+...)
+            // always lists its components: without them the separator behind the tag would be lost.
+            if (!element.isEmpty() || element.index == 0) {
                 int number = 1;
                 for (String component : element.components) {
                     String componentName = elementName + "." + number++;

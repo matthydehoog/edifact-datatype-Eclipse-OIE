@@ -4,12 +4,10 @@ An **EDIFACT data type** for [Eclipse Open Integration Engine](https://openinteg
 
 > Community extension. It is not part of, or endorsed by, the Eclipse OIE project.
 
-The data type works at the level of the EDIFACT syntax (ISO 9735), so it can be used for any EDIFACT-based standard, including national ones such as the Dutch EDIFACT messages. It does not validate messages against a specific message definition (see *Not included*).
-
 ## What you get
 
 - The **EDIFACT** data type for source and destination connectors, with a properties panel in the **Swing client** and the **web administrator**.
-- Reads UN/EDIFACT interchanges: **UNA** service string advice, **release character** escapes (`?+`, `?:`, `?'`, `??`), a **repetition separator** (syntax version 4), line breaks between segments, a missing terminator on the last segment.
+- Reads UN/EDIFACT interchanges, including the Dutch MEDLAB dialect (components directly behind the tag, see below): **UNA** service string advice, **release character** escapes (`?+`, `?:`, `?'`, `??`), a **repetition separator** (syntax version 4), line breaks between segments, a missing terminator on the last segment.
 - Writes them back **byte for byte** (apart from line breaks between segments, which are configurable): an interchange survives `EDIFACT -> XML -> EDIFACT` unchanged.
 - **Metadata** for the message list and searches: source = interchange sender (UNB), type = message type (UNH, e.g. `ORDERS`), version = version and release (e.g. `D96A`).
 - **Message tree descriptions** for the service segments and the most common message segments (BGM, DTM, NAD, LIN, QTY, ...).
@@ -47,6 +45,26 @@ becomes
 ```
 
 The root is `EDIFACTInterchange` when the message has a UNA or UNB, otherwise `EDIFACTMessage` (a bare UNH...UNT message). A complete example is in [`examples/orders.edi`](examples/orders.edi) and [`examples/orders.xml`](examples/orders.xml).
+
+### Components directly behind the tag
+
+Some national dialects, such as the Dutch MEDLAB messages, put components straight behind the segment tag instead of an element separator:
+
+```
+ARA:1+J. Jansen+000-0000001'
+SEC:1:1+MEETWAARDEN'
+BEP:1:1:3+0+Quet/BMI+23.1++kg/m2++10+50+QUET'
+```
+
+These components become **data element 0** of the segment, `TAG.00`, with the components `TAG.00.1`, `TAG.00.2`, ... The regular data elements keep their numbers, so `BEP.02` is still the second element behind the `+`. `TAG.00` is written straight behind the tag again, without an element separator. An example is in [`examples/medlab.edi`](examples/medlab.edi).
+
+```xml
+<ARA>
+  <ARA.00><ARA.00.1>1</ARA.00.1></ARA.00>
+  <ARA.01><ARA.01.1>J. Jansen</ARA.01.1></ARA.01>
+  <ARA.02><ARA.02.1>000-0000001</ARA.02.1></ARA.02>
+</ARA>
+```
 
 In a transformer (E4X):
 
