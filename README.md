@@ -138,4 +138,4 @@ Requirements: a JDK 11+ (the runtime bundled with the engine, `<OIE_HOME>/jre`, 
 
 ## License
 
-The Java sources carry a [Mozilla Public License 2.0](LICENSE-MPL-2.0) header: the structure of this data type follows the EDI / X12 data type of Open Integration Engine (Mirth Connect, Copyright (c) Mirth Corporation), which is MPL 2.0 as well. All other files in this repository are licensed under the Apache License 2.0 ([LICENSE](LICENSE)).
+[Mozilla Public License 2.0](LICENSE). The structure of this data type follows the EDI / X12 data type of Open Integration Engine (Mirth Connect, Copyright (c) Mirth Corporation), which is MPL 2.0 as well.
