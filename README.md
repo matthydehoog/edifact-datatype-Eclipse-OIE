@@ -82,6 +82,7 @@ for each (var nad in msg['NAD']) {
 
 ## Install
 
+0. Or install it from the [OIE Community Store](https://github.com/gibson9583/oie-community-store), where it is listed as **EDIFACT Data Type**.
 1. Download `datatype-edifact-<version>.zip` from the [Releases](../../releases) page (or build it, see below).
 2. Settings -> Extensions -> **Install Extension**, choose the zip, restart the engine.
 3. Restart the Swing client. In the web administrator do a hard refresh (Ctrl+F5).
