@@ -87,7 +87,7 @@ for each (var nad in msg['NAD']) {
 
 ### Code templates
 
-The reference list of the filter and transformer editors (Swing Administrator) has an **EDIFACT** category with templates you can drag into a script:
+The reference list of the filter and transformer editors (Swing Administrator) has an **EDIFACT** category with templates you can drag into a script. The [code templates guide](docs/CODE_TEMPLATES.md) explains each one with its fields and examples.
 
 | Template | What it does |
 | --- | --- |
