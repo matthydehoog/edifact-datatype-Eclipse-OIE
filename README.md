@@ -58,6 +58,8 @@ BEP:1:1:3+0+Quet/BMI+23.1++kg/m2++10+50+QUET'
 
 These components become **data element 0** of the segment, `TAG.00`, with the components `TAG.00.1`, `TAG.00.2`, ... The regular data elements keep their numbers, so `BEP.02` is still the second element behind the `+`. `TAG.00` is written straight behind the tag again, without an element separator. An example is in [`examples/medlab.edi`](examples/medlab.edi).
 
+Other Dutch healthcare messages work as well, for example the MEDSPE 3.1 specialist letter in [`examples/medspe.edi`](examples/medspe.edi) (free text with release characters, `""` as an empty value). The specifications the data type was checked against are listed in [`docs/specs`](docs/specs/README.md).
+
 ```xml
 <ARA>
   <ARA.00><ARA.00.1>1</ARA.00.1></ARA.00>

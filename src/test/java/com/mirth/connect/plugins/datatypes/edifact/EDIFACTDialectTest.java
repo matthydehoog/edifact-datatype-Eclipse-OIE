@@ -95,6 +95,27 @@ public class EDIFACTDialectTest {
         assertEquals(message.replaceAll("[\r\n]+", ""), roundTrip(message));
     }
 
+    /**
+     * MEDSPE 3.1, a specialist letter (examples/medspe.edi, a fictitious test patient): no UNA, release
+     * characters inside the free text (Aan?:, geb. datum ... ?:), and "" as an explicitly empty value.
+     */
+    @Test
+    public void medspeMessageSurvivesTheRoundTrip() throws Exception {
+        String message = new String(Files.readAllBytes(Paths.get("examples/medspe.edi")), StandardCharsets.UTF_8);
+
+        assertEquals(message.replaceAll("[\r\n]+", ""), roundTrip(message));
+
+        Document doc = dom(serializer().toXML(message));
+        assertEquals("MEDSPE", xpath(doc, "/EDIFACTInterchange/UNH/UNH.02/UNH.02.1"));
+        assertEquals("Aan:", xpath(doc, "/EDIFACTInterchange/FTX[1]/FTX.04/FTX.04.1"));
+        assertEquals(9, count(doc, "/EDIFACTInterchange/FTX"));
+        assertEquals("\"\"", xpath(doc, "/EDIFACTInterchange/PID/PID.03/PID.03.4"));
+
+        Map<String, Object> map = serializer().getMetaDataFromMessage(message);
+        assertEquals("800027866", map.get(DefaultMetaData.SOURCE_VARIABLE_MAPPING));
+        assertEquals("MEDSPE", map.get(DefaultMetaData.TYPE_VARIABLE_MAPPING));
+    }
+
     @Test
     public void medlabMetadata() throws Exception {
         Map<String, Object> map = serializer().getMetaDataFromMessage(medlab());
