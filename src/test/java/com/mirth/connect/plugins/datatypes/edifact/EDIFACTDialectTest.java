@@ -116,6 +116,45 @@ public class EDIFACTDialectTest {
         assertEquals("MEDSPE", map.get(DefaultMetaData.TYPE_VARIABLE_MAPPING));
     }
 
+    /** The message tree passes the message type from the metadata (UNH.02.1) to the vocabulary. */
+    @Test
+    public void everyMedlabNodeHasADescription() throws Exception {
+        String message = medlab();
+        Map<String, Object> map = serializer().getMetaDataFromMessage(message);
+        EDIFACTVocabulary v = new EDIFACTVocabulary((String) map.get(DefaultMetaData.VERSION_VARIABLE_MAPPING), (String) map.get(DefaultMetaData.TYPE_VARIABLE_MAPPING));
+
+        org.w3c.dom.NodeList nodes = dom(serializer().toXML(message)).getDocumentElement().getElementsByTagName("*");
+        assertTrue(nodes.getLength() > 100);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            String name = nodes.item(i).getNodeName();
+            assertTrue("No description for " + name, v.getDescription(name).length() > 0);
+        }
+    }
+
+    @Test
+    public void medlabDescriptions() {
+        EDIFACTVocabulary v = new EDIFACTVocabulary("1", "MEDLAB");
+
+        assertEquals("Test result (Bepalingsgegevens)", v.getDescription("BEP"));
+        assertEquals("Test number", v.getDescription("BEP.00.3"));
+        assertEquals("Test name", v.getDescription("BEP.02"));
+        assertEquals("Result", v.getDescription("BEP.03"));
+        assertEquals("Unit", v.getDescription("BEP.05"));
+        assertEquals("Test code", v.getDescription("BEP.09"));
+        assertEquals("Initials", v.getDescription("PID.03.6"));
+        assertEquals("Postal code", v.getDescription("PAD.01.5"));
+        assertEquals("Sequence number", v.getDescription("OPB.00"));
+        // the envelope keeps its UN/EDIFACT descriptions
+        assertEquals("Message type", v.getDescription("UNH.02.1"));
+
+        // COM is a general comment in MEDLAB, a communication contact elsewhere
+        assertEquals("General laboratory comment (Algemeen commentaar laboratorium)", v.getDescription("COM"));
+        assertEquals("", v.getDescription("COM.01.2"));
+        EDIFACTVocabulary orders = new EDIFACTVocabulary("D96A", "ORDERS");
+        assertEquals("Communication contact", orders.getDescription("COM"));
+        assertEquals("", orders.getDescription("BEP"));
+    }
+
     @Test
     public void medlabMetadata() throws Exception {
         Map<String, Object> map = serializer().getMetaDataFromMessage(medlab());

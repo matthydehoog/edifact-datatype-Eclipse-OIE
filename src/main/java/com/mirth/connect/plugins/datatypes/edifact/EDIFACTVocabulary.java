@@ -18,9 +18,16 @@ import com.mirth.connect.model.util.MessageVocabulary;
  * Descriptions for the message tree of the administrator: the service segments (UNA/UNB/UNG/UNH/UNT/UNE/UNZ)
  * completely, and the most common message segments (BGM, DTM, NAD, LIN, ...) down to the data elements.
  * Names follow UN/EDIFACT, ISO 9735. Ids look like UNH, UNH.02 and UNH.02.1.
+ * <p>
+ * For the Dutch MEDLAB laboratory message (message type MEDLAB in UNH.02.1, which the message tree passes in as
+ * the type) the MEDLAB segments are described instead, after <i>Berichtdefinitie Laboratoriumbericht MEDLAB 1</i>,
+ * including data element 0 (the sequence numbers directly behind the tag, as in BEP:1:1:3). In other messages a
+ * segment with the same tag (COM) keeps its UN/EDIFACT description.
  */
 public class EDIFACTVocabulary extends MessageVocabulary {
     private static final Map<String, String> DESCRIPTIONS = new HashMap<String, String>();
+    private static final Map<String, String> MEDLAB = new HashMap<String, String>();
+    private static final String ADDRESS = "Address|Street|House number|PO box|City|Postal code|Province|Country";
 
     static {
         // Segments without data element descriptions
@@ -38,6 +45,8 @@ public class EDIFACTVocabulary extends MessageVocabulary {
         elements("UNE", "Number of messages", "Functional group reference number");
         elements("UNZ", "Interchange control count", "Interchange control reference");
         elements("UNS", "Section identification");
+
+        medlab();
 
         elements("BGM", "Document/message name|Document name code|Code list identification code|Code list responsible agency code|Document name", "Document/message identification|Document identifier|Version identifier|Revision identifier", "Message function code", "Response type code");
         elements("DTM", "Date/time/period|Date or time or period function code qualifier|Date or time or period text|Date or time or period format code");
@@ -59,27 +68,101 @@ public class EDIFACTVocabulary extends MessageVocabulary {
         elements("TAX", "Duty or tax or fee function code qualifier", "Duty or tax or fee type|Duty or tax or fee type name code|Code list identification code|Code list responsible agency code|Duty or tax or fee type name", "Duty or tax or fee account detail|Duty or tax or fee account identifier|Code list identification code|Code list responsible agency code", "Duty or tax or fee assessment basis quantity", "Duty or tax or fee detail|Duty or tax or fee rate code|Code list identification code|Code list responsible agency code|Duty or tax or fee rate|Duty or tax or fee rate basis", "Duty or tax or fee category code", "Party tax identifier", "Calculation sequence code");
     }
 
+    /** MEDLAB 1 (Berichtdefinitie Laboratoriumbericht MEDLAB 1, Medische Berichten versie 1). */
+    private static void medlab() {
+        String[][] segments = { { "ZKH", "Hospital details (Ziekenhuisgegevens)" }, { "PID", "Patient details (Persoonsgegevens patiënt)" }, { "PAD", "Patient address (Adresgegevens patiënt)" }, { "BLG", "Patient blood group (Bloedgroep patiënt)" }, { "ART", "Addressed physician (Gegevens geadresseerde arts)" }, { "AFD", "Laboratory details (Laboratorium gegevens)" },
+                { "ARA", "Laboratory physician (Artsen laboratorium)" }, { "KOP", "Copy of the report from/to a physician (Kopie rapport)" }, { "DET", "Date/time of sampling or request (Datum/tijdstip afname)" }, { "IDE", "Sample/request identification (Identificatie materiaal/aanvraag)" }, { "OPM", "Remark on the sample/request (Opmerking materiaal/aanvraag)" }, { "SEC", "Section (Sectiegegevens)" },
+                { "BEP", "Test result (Bepalingsgegevens)" }, { "OPB", "Remark on the test (Opmerking bepaling)" }, { "NUB", "Test still to be done (Nog uit te voeren bepaling)" }, { "OPU", "Remark on a test still to be done (Opmerking uit te voeren bepaling)" }, { "COM", "General laboratory comment (Algemeen commentaar laboratorium)" } };
+        for (String[] segment : segments) {
+            MEDLAB.put(segment[0], segment[1]);
+        }
+
+        put(MEDLAB, "ZKH", "Institution name", ADDRESS, "Telephone", "Hospital code");
+        put(MEDLAB, "PID", "Date of birth|Year|Month|Day", "Sex", "Patient name|Surname|Prefixes|Maiden name|Prefixes of the maiden name|First name|Initials", "Patient reference number of the sender", "Patient reference number of the recipient");
+        put(MEDLAB, "PAD", ADDRESS, "Telephone");
+        put(MEDLAB, "BLG", "Blood group");
+        put(MEDLAB, "ART", "Kind of physician", "Physician code", "Physician name|Surname|Prefixes|Initials|Titles", ADDRESS, "Telephone");
+        put(MEDLAB, "AFD", "Department", "Telephone");
+        put(MEDLAB, "ARA", "Name", "Telephone");
+        put(MEDLAB, "KOP", "Copy of report (VAN = from, NAAR = to)", "Name", "Name", "Name", "Name");
+        put(MEDLAB, "DET", "Date|Year|Month|Day", "Time|Hour|Minute");
+        put(MEDLAB, "IDE", "Complete (J/N)", "Identification number (sample or request)", "Sample type", "Sample volume");
+        put(MEDLAB, "OPM", "Text");
+        put(MEDLAB, "SEC", "Section name");
+        put(MEDLAB, "BEP", "Kind of test", "Test name", "Result", "Result changed indicator", "Unit", "Reference range indicator", "Lower limit", "Upper limit", "Test code");
+        put(MEDLAB, "OPB", "Text");
+        put(MEDLAB, "NUB", "Test");
+        put(MEDLAB, "OPU", "Text");
+        put(MEDLAB, "COM", "Text");
+
+        // Data element 0: the sequence numbers directly behind the tag (DET:1, SEC:1:1, BEP:1:1:3).
+        put(MEDLAB, "ARA.00", "Sequence number|Physician number");
+        put(MEDLAB, "DET.00", "Sequence number|Sample/request number");
+        put(MEDLAB, "IDE.00", "Sequence number|Sample/request number");
+        put(MEDLAB, "SEC.00", "Sequence number|Sample/request number|Section number");
+        put(MEDLAB, "BEP.00", "Sequence number|Sample/request number|Section number|Test number");
+    }
+
     private static void elements(String tag, String... elements) {
+        put(DESCRIPTIONS, tag, elements);
+    }
+
+    /** Numbers the elements from TAG.01, or, for an id such as BEP.00, describes that one element. */
+    private static void put(Map<String, String> descriptions, String tag, String... elements) {
+        if (tag.contains(".")) {
+            String[] parts = elements[0].split("\\|");
+            descriptions.put(tag, parts[0]);
+            for (int i = 1; i < parts.length; i++) {
+                descriptions.put(tag + "." + i, parts[i]);
+            }
+            return;
+        }
         int number = 1;
         for (String element : elements) {
             String[] parts = element.split("\\|");
             String elementId = tag + "." + (number < 10 ? "0" + number : String.valueOf(number));
-            DESCRIPTIONS.put(elementId, parts[0]);
+            descriptions.put(elementId, parts[0]);
             for (int i = 1; i < parts.length; i++) {
-                DESCRIPTIONS.put(elementId + "." + i, parts[i]);
+                descriptions.put(elementId + "." + i, parts[i]);
             }
             number++;
         }
     }
 
+    private final boolean medlab;
+
     public EDIFACTVocabulary(String version, String type) {
         super(version, type);
+        medlab = type != null && type.trim().equalsIgnoreCase("MEDLAB");
     }
 
     @Override
     public String getDescription(String elementId) {
-        String description = elementId == null ? null : DESCRIPTIONS.get(elementId);
+        if (elementId == null) {
+            return "";
+        }
+        String description = lookup(elementId);
+        if (description == null && elementId.endsWith(".1") && elementId.length() == 8) {
+            // The only component of a simple data element (UNB.05.1): the element itself.
+            String element = elementId.substring(0, 6);
+            if (getDescription(element + ".2").isEmpty()) {
+                return getDescription(element);
+            }
+        }
         return description == null ? "" : description;
+    }
+
+    private String lookup(String elementId) {
+        if (medlab) {
+            String description = MEDLAB.get(elementId);
+            if (description == null && elementId.matches("[A-Z0-9]{3}\\.00(\\.\\d+)?")) {
+                description = "Sequence number";
+            }
+            if (description != null || MEDLAB.containsKey(elementId.substring(0, Math.min(3, elementId.length())))) {
+                return description;
+            }
+        }
+        return DESCRIPTIONS.get(elementId);
     }
 
     @Override

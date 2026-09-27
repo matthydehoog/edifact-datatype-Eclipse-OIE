@@ -10,7 +10,7 @@ An **EDIFACT data type** for [Eclipse Open Integration Engine](https://openinteg
 - Reads UN/EDIFACT interchanges, including the Dutch MEDLAB dialect (components directly behind the tag, see below): **UNA** service string advice, **release character** escapes (`?+`, `?:`, `?'`, `??`), a **repetition separator** (syntax version 4), line breaks between segments, a missing terminator on the last segment.
 - Writes them back **byte for byte** (apart from line breaks between segments, which are configurable): an interchange survives `EDIFACT -> XML -> EDIFACT` unchanged.
 - **Metadata** for the message list and searches: source = interchange sender (UNB), type = message type (UNH, e.g. `ORDERS`), version = version and release (e.g. `D96A`).
-- **Message tree descriptions** for the service segments and the most common message segments (BGM, DTM, NAD, LIN, QTY, ...).
+- **Message tree descriptions** for the service segments and the most common message segments (BGM, DTM, NAD, LIN, QTY, ...), and for all segments of the Dutch **MEDLAB** laboratory message (ZKH, PID, BEP, ... including data element 0) when the message type is MEDLAB.
 - **Batch** processing with a JavaScript splitter, like the EDI / X12 type.
 
 ## The XML
