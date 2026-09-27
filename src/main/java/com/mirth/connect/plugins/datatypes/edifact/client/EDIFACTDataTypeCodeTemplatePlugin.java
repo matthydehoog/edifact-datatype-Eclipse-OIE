@@ -9,6 +9,10 @@
 
 package com.mirth.connect.plugins.datatypes.edifact.client;
 
+import java.util.List;
+import java.util.Map;
+
+import com.mirth.connect.model.codetemplates.CodeTemplate;
 import com.mirth.connect.model.datatype.DataTypeDelegate;
 import com.mirth.connect.plugins.DataTypeCodeTemplatePlugin;
 import com.mirth.connect.plugins.datatypes.edifact.EDIFACTDataTypeDelegate;
@@ -27,5 +31,13 @@ public class EDIFACTDataTypeCodeTemplatePlugin extends DataTypeCodeTemplatePlugi
     @Override
     protected String getDisplayName() {
         return "EDIFACT";
+    }
+
+    /** The conversion templates of every data type, plus an EDIFACT category with EDIFACT tasks. */
+    @Override
+    public Map<String, List<CodeTemplate>> getReferenceItems() {
+        Map<String, List<CodeTemplate>> items = super.getReferenceItems();
+        items.put(EDIFACTCodeTemplates.CATEGORY, EDIFACTCodeTemplates.getCodeTemplates());
+        return items;
     }
 }

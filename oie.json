@@ -5,7 +5,7 @@
   "description": "Data type for UN/EDIFACT interchanges (including UNA, release characters and repetition separators), modelled on the built-in EDI / X12 data type. Includes support for the Dutch MEDLAB TAG.00 variant.",
   "type": "datatype",
   "ui": ["web", "swing"],
-  "version": "1.0.3",
+  "version": "1.0.4",
   "minEngineVersion": "4.6.0",
   "maxEngineVersion": null,
   "filename": "datatype-edifact-{version}.zip",

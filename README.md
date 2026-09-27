@@ -12,6 +12,7 @@ An **EDIFACT data type** for [Eclipse Open Integration Engine](https://openinteg
 - **Metadata** for the message list and searches: source = interchange sender (UNB), type = message type (UNH, e.g. `ORDERS`), version = version and release (e.g. `D96A`).
 - **Message tree descriptions** for the service segments and the most common message segments (BGM, DTM, NAD, LIN, QTY, ...), and for all segments of the Dutch **MEDLAB** laboratory message (ZKH, PID, BEP, ... including data element 0) when the message type is MEDLAB.
 - **Batch** processing with a JavaScript splitter, like the EDI / X12 type.
+- **Code templates** for common EDIFACT tasks in the transformer reference list, see below.
 
 ## The XML
 
@@ -81,6 +82,18 @@ for each (var nad in msg['NAD']) {
     }
 }
 ```
+
+### Code templates
+
+The reference list of the filter and transformer editors (Swing Administrator) has an **EDIFACT** category with templates you can drag into a script:
+
+| Template | What it does |
+| --- | --- |
+| Build an interchange envelope | Builds UNA, UNB, UNH ... UNT, UNZ around your segments, with the references and counters filled in |
+| Walk the line items (LIN with QTY, PRI, IMD) | Collects every line item with the quantities, prices and description that belong to it |
+| Find a party by qualifier (NAD) | Finds the NAD of the buyer (`BY`), supplier (`SU`), delivery party (`DP`), ... |
+| Read MEDLAB results (BEP) | Collects every MEDLAB test result with its section, value, unit, reference range and remarks |
+| Escape and unescape text | `edifactEscape()` / `edifactUnescape()` for the release character in raw EDIFACT text |
 
 ## Install
 
