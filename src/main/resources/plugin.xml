@@ -2,7 +2,7 @@
 	<name>EDIFACT Data Type</name>
 	<author>X Connections</author>
 	<pluginVersion>1.0.4</pluginVersion>
-	<mirthVersion>4.6.0</mirthVersion>
+	<mirthVersion>4.6.0,4.7.0</mirthVersion>
 	<url>https://x-connections.info</url>
 	<description>This plugin provides support for the EDIFACT data type (UN/EDIFACT interchanges, including UNA, release characters and repetition separators).</description>
 	<serverClasses>
