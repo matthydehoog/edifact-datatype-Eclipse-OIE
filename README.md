@@ -183,6 +183,8 @@ The workflow builds the tag and creates the GitHub release with the zip and its 
 
 ## Design notes (for developers)
 
+The [development guide](docs/development.md) covers building, the parser and the XML conversion, the dialects, code templates, testing, the CI and releasing in detail. In short:
+
 - **Package name.** The classes live in `com.mirth.connect.plugins.datatypes.edifact`. The engine's XStream allow-list only accepts classes from the `com.mirth.connect.*` family when it reads a channel, so a package of your own would make the channel unreadable.
 - **Folder name = `path`.** The `path` attribute in `plugin.xml` (`datatype-edifact`) must equal the extension folder name; uninstalling and the web administrator both build paths from it.
 - **Null-safe properties.** The engine does not run constructors when it reads a saved channel, so a property added later is null there. The getters of `EDIFACTSerializationProperties` fall back to the defaults.
