@@ -12,7 +12,7 @@ An **EDIFACT data type** for [Eclipse Open Integration Engine](https://openinteg
 - Reads UN/EDIFACT interchanges, including the Dutch MEDLAB dialect (components directly behind the tag, see below): **UNA** service string advice, **release character** escapes (`?+`, `?:`, `?'`, `??`), a **repetition separator** (syntax version 4), line breaks between segments, a missing terminator on the last segment.
 - Writes them back **byte for byte** (apart from line breaks between segments, which are configurable): an interchange survives `EDIFACT -> XML -> EDIFACT` unchanged.
 - **Metadata** for the message list and searches: source = interchange sender (UNB), type = message type (UNH, e.g. `ORDERS`), version = version and release (e.g. `D96A`).
-- **Message tree descriptions** for the service segments and the most common message segments (BGM, DTM, NAD, LIN, QTY, ...), and for all segments of the Dutch **MEDLAB** laboratory message (ZKH, PID, BEP, ... including data element 0) when the message type is MEDLAB.
+- **Message tree descriptions** for the service segments and the most common message segments (BGM, DTM, NAD, LIN, QTY, ...), and for all segments of the Dutch **MEDLAB** laboratory message (ZKH, PID, BEP, ... including data element 0) when the message type is MEDLAB. The Swing client shows them; the web administrator does too from Web Support 1.1.0.
 - **Batch** processing with a JavaScript splitter, like the EDI / X12 type.
 - **Code templates** for common EDIFACT tasks in the transformer reference list, see below.
 
@@ -175,8 +175,8 @@ Every push and pull request is built and tested on GitHub Actions (`.github/work
 2. Commit, then tag and push the tag:
 
    ```bash
-   git tag v1.0.5
-   git push origin v1.0.5
+   git tag v1.0.6
+   git push origin v1.0.6
    ```
 
 The workflow builds the tag and creates the GitHub release with the zip and its SHA-256. To write the release notes yourself, create the release on GitHub first (without a zip); the workflow then only adds the zip and the checksum.

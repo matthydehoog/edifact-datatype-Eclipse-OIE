@@ -222,6 +222,8 @@ When adding support for another dialect, add a fictitious example to `examples/`
 
 The tables are built in a static block. A segment is listed as `elements("TAG", "element", "element|component|component", ...)`: each argument is one data element, in order, and `|` separates the components.
 
+The Swing client gets the class from `EDIFACTDataTypeClientPlugin.getVocabulary()`. The web administrator gets it from the `vocabularies` entry in `webadmin/plugin.json`, which Web Support 1.1.0 and later read on the server. That entry only works because the class is in the shared jar, is called with `(String version, String type)` and returns `EDIFACT` from `getDataType()`: keep it that way when you move or rename it.
+
 ## Code templates
 
 `client.EDIFACTCodeTemplates` lists the five templates of the *EDIFACT* category: a name, a JavaScript resource in `templates/`, whether it uses `msg`, and a description.
@@ -254,7 +256,7 @@ Channels are stored with XStream, which **does not run constructors**. A propert
 
 ## The web administrator
 
-`webadmin/plugin.json` registers the panel; `webadmin/web/plugin.js` describes the fields of both property groups with their keys, defaults and tooltips. It is a static copy of `getPropertyDescriptors()`: keep both in sync by hand. After installing a new version, a hard refresh (Ctrl+F5) loads the new panel.
+`webadmin/plugin.json` registers the panel and declares the vocabulary for the message tree (see [Message tree descriptions](#message-tree-descriptions-edifactvocabulary)); `webadmin/web/plugin.js` describes the fields of both property groups with their keys, defaults and tooltips. It is a static copy of `getPropertyDescriptors()`: keep both in sync by hand. After installing a new version, a hard refresh (Ctrl+F5) loads the new panel.
 
 The web administrator has no hook for reference list items, so the code templates only appear in the Swing Administrator.
 
