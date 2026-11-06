@@ -49,7 +49,7 @@ jobs:
         run: mvn -B package
 
       - name: Keep the zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: datatype-edifact
           path: target/datatype-edifact-*.zip
