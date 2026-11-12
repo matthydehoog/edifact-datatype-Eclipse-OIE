@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/matthydehoog/edifact-datatype-Eclipse-OIE/actions/workflows/build.yml/badge.svg)](https://github.com/matthydehoog/edifact-datatype-Eclipse-OIE/actions/workflows/build.yml)
 
-An **EDIFACT data type** for [Eclipse Open Integration Engine](https://openintegrationengine.org/) (tested against **4.6.0**), modelled on the built-in *EDI / X12* data type. Once installed, "EDIFACT" shows up next to HL7 v2.x, EDI / X12 and the other data types in the Swing client and the web administrator. Incoming EDIFACT is converted to XML for your filters and transformers; XML is converted back to EDIFACT for the outbound side.
+An **EDIFACT data type** for [Eclipse Open Integration Engine](https://openintegrationengine.org/) (tested against **4.6.0** and **4.7.0**), modelled on the built-in *EDI / X12* data type. Once installed, "EDIFACT" shows up next to HL7 v2.x, EDI / X12 and the other data types in the Swing client and the web administrator. Incoming EDIFACT is converted to XML for your filters and transformers; XML is converted back to EDIFACT for the outbound side.
 
 > Community extension. It is not part of, or endorsed by, the Eclipse OIE project.
 
@@ -167,7 +167,7 @@ Requirements: a JDK 11+ (the runtime bundled with the engine, `<OIE_HOME>/jre`, 
 
 ### Continuous integration
 
-Every push and pull request is built and tested on GitHub Actions (`.github/workflows/build.yml`). The engine jars come from the Open Integration Engine release on GitHub, checked against its SHA-256 and cached. The build also checks that the four version numbers (see below) are the same.
+Every push and pull request is built and tested on GitHub Actions (`.github/workflows/build.yml`) against OIE 4.6.0 (Java 17) and 4.7.0 (Java 17 and 21). The zip is then installed in a real engine of both versions, which deploys a channel and converts EDIFACT to XML and back (the smoke test, see the [development guide](docs/development.md#smoke-test)). The engine jars come from the Open Integration Engine release on GitHub, checked against its SHA-256 and cached. The build also checks that the four version numbers (see below) are the same.
 
 ### Releasing
 
