@@ -323,7 +323,7 @@ Run it locally with a JDK (the channel generator runs as a Java source file, whi
 
 ```bash
 mvn clean package
-JAVA="$JAVA_HOME/bin/java" SMOKE_HTTP_PORT=18080 SMOKE_HTTPS_PORT=18443 SMOKE_LISTENER_PORT=18090   bash .github/scripts/smoke-test.sh 4.7.0 target/datatype-edifact-1.0.6.zip
+JAVA="$JAVA_HOME/bin/java" SMOKE_HTTP_PORT=18080 SMOKE_HTTPS_PORT=18443 SMOKE_LISTENER_PORT=18090   bash .github/scripts/smoke-test.sh 4.7.0 target/datatype-edifact-1.0.7.zip
 ```
 
 The ports keep it away from an engine that already runs on 8080/8443. `SMOKE_DIR` keeps the test engine in a folder of your choice.
@@ -346,8 +346,8 @@ Dependabot (`.github/dependabot.yml`) proposes updates weekly for Maven and mont
 5. **Tag** the merged commit on `main` and push the tag:
 
    ```bash
-   git tag v1.0.6
-   git push origin v1.0.6
+   git tag v1.0.7
+   git push origin v1.0.7
    ```
 
    When the builds and smoke tests pass, the workflow creates the release with `datatype-edifact-<version>.zip` and its `.sha256`, or adds them to the release you wrote. A release that already has a zip is left alone: a new build gives a different file, whose checksum would not match.
@@ -355,7 +355,7 @@ Dependabot (`.github/dependabot.yml`) proposes updates weekly for Maven and mont
 7. **Jira.** Closing a GitHub issue does not close its Jira issue: set it to *Done* yourself.
 8. **Documentation.** Update the README and `docs/CODE_TEMPLATES.md` when behaviour, settings or templates change.
 
-`release.sh` can be tried locally with `DRY_RUN=1 bash .github/scripts/release.sh v1.0.6` after a build.
+`release.sh` can be tried locally with `DRY_RUN=1 bash .github/scripts/release.sh v1.0.7` after a build.
 
 ## Conventions
 
