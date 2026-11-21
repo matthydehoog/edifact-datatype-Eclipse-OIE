@@ -105,6 +105,25 @@ The reference list of the filter and transformer editors (Swing Administrator) h
 3. Restart the Swing client. In the web administrator do a hard refresh (Ctrl+F5).
 4. In a channel, open the source connector's **Set Data Types** and choose **EDIFACT**.
 
+### Administrator launchers
+
+Since 1.0.7 the plugin's jars are signed with the X Connections code-signing certificate. The certificate is self-signed. Launchers differ in how they treat that:
+
+- **The Open Integration Engine launcher and the BridgeLink launcher** don't check jar signatures and load the plugin as it is. We advise using one of these.
+- **The Mirth Connect Administrator Launcher (MCAL)** from NextGen is not open source. It checks every jar and only trusts NextGen's own certificates and certificates from a public certificate authority. It refuses self-signed jars, and unsigned ones from older versions, with this error:
+
+  ```
+  Error verifying entry "META-INF/MANIFEST.MF" in JAR file datatype-edifact-client.jar
+  ```
+
+  To use MCAL anyway, add this line to `launcher.vmoptions` in the MCAL folder (by default `C:Program FilesMirth Connect Administrator Launcher`; editing it needs administrator rights), then restart MCAL:
+
+  ```
+  -Dallow-self-signed
+  ```
+
+  Starting MCAL with `--allow-self-signed` (or `-k`) does the same. MCAL then accepts jars signed with any self-signed certificate, from any server, so only do this on machines that connect to servers you trust. Versions before 1.0.7 are unsigned and fail in MCAL even with this option.
+
 ## Settings
 
 The delimiters are used when the message has no UNA, when *Infer Delimiters* is off, and when XML that carries no delimiters of its own is converted to EDIFACT.
